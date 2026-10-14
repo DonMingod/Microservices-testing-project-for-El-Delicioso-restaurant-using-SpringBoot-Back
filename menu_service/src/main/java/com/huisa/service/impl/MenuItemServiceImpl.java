@@ -2,6 +2,7 @@ package com.huisa.service.impl;
 
 import com.huisa.dto.MenuItemRequestDto;
 import com.huisa.dto.MenuItemResponseDto;
+import com.huisa.exception.ResourceNotFoundException;
 import com.huisa.model.Category;
 import com.huisa.model.MenuItem;
 import com.huisa.repository.CategoryRepository;
@@ -26,7 +27,10 @@ public class MenuItemServiceImpl implements MenuItemService {
 
         Category category = categoryRepository.findById(request.categoryId())
                 .orElseThrow(() ->
-                        new RuntimeException("Category not found"));
+                        new ResourceNotFoundException(
+                                "Category not found with id: "
+                                        + request.categoryId()
+                        ));
 
         MenuItem menuItem = menuItemMapper.toEntity(request);
 
@@ -42,8 +46,9 @@ public class MenuItemServiceImpl implements MenuItemService {
 
         MenuItem menuItem = menuItemRepository.findById(id)
                 .orElseThrow(() ->
-                        new RuntimeException("Menu item not found"));
-
+                        new ResourceNotFoundException(
+                                "Menu item not found with id: " + id
+                        ));
         return menuItemMapper.toDto(menuItem);
     }
 
@@ -62,11 +67,15 @@ public class MenuItemServiceImpl implements MenuItemService {
 
         MenuItem menuItem = menuItemRepository.findById(id)
                 .orElseThrow(() ->
-                        new RuntimeException("Menu item not found"));
+                        new ResourceNotFoundException(
+                                "Menu item not found with id: " + id
+                        ));
 
         Category category = categoryRepository.findById(request.categoryId())
                 .orElseThrow(() ->
-                        new RuntimeException("Category not found"));
+                        new ResourceNotFoundException(
+                                "Category not found with id: " + request.categoryId()
+                        ));
 
         menuItemMapper.updateEntity(request, menuItem);
 
@@ -82,7 +91,9 @@ public class MenuItemServiceImpl implements MenuItemService {
 
         MenuItem menuItem = menuItemRepository.findById(id)
                 .orElseThrow(() ->
-                        new RuntimeException("Menu item not found"));
+                        new ResourceNotFoundException(
+                                "Menu item not found with id: " + id
+                        ));
 
         menuItemRepository.delete(menuItem);
     }

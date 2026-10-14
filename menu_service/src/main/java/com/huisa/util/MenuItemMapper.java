@@ -9,13 +9,13 @@ import org.mapstruct.MappingTarget;
 
 import java.util.List;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface MenuItemMapper {
 
     @Mapping(target = "category", ignore = true)
     MenuItem toEntity(MenuItemRequestDto request);
 
-    @Mapping(target = "categoryId", source = "category.id")
+    //@Mapping(target = "categoryId", source = "category.id")
     @Mapping(target = "categoryName", source = "category.name")
     MenuItemResponseDto toDto(MenuItem menuItem);
 

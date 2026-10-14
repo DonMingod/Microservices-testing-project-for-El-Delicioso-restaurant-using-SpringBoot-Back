@@ -38,16 +38,37 @@ public class MenuItem {
     private Integer stock;
 
     @Column(name = "is_available", nullable = false)
-    private  Boolean isAvailable;
+    @Builder.Default
+    private Boolean isAvailable = true;
 
-    @Column(name = "created_at", insertable = false, updatable = false)
+    @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    @Column(name = "updated_at", insertable = false, updatable = false)
-    private  LocalDateTime updatedAt;
+    @Column(name = "updated_at", nullable = false)
+    private LocalDateTime updatedAt;
+
+    @PrePersist
+    protected void onCreate() {
+        LocalDateTime now = LocalDateTime.now();
+
+        this.createdAt = now;
+        this.updatedAt = now;
+
+        if (this.stock == null) {
+            this.stock = 0;
+        }
+
+        if (this.isAvailable == null) {
+            this.isAvailable = true;
+        }
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        this.updatedAt = LocalDateTime.now();
+    }
 
 }
-
 
 
 
