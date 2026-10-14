@@ -2,6 +2,7 @@ package com.huisa.service.impl;
 
 import com.huisa.dto.CategoryRequestDto;
 import com.huisa.dto.CategoryResponseDto;
+import com.huisa.exception.ResourceNotFoundException;
 import com.huisa.model.Category;
 import com.huisa.repository.CategoryRepository;
 import com.huisa.service.CategoryService;
@@ -29,7 +30,9 @@ public class CategoryServiceImpl implements CategoryService {
     public CategoryResponseDto findById(Long id){
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() ->
-                        new RuntimeException("Category not found"));
+                        new ResourceNotFoundException(
+                                "Category not found with id: " + id
+                        ));
         return categoryMapper.toDto(category);
 
     }
@@ -46,7 +49,9 @@ public class CategoryServiceImpl implements CategoryService {
 
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() ->
-                        new RuntimeException("Category not found"));
+                        new ResourceNotFoundException(
+                                "Category not found with id: " + id
+                        ));
 
         categoryMapper.updateEntity(request, category);
 
@@ -60,7 +65,9 @@ public class CategoryServiceImpl implements CategoryService {
 
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() ->
-                        new RuntimeException("Category not found"));
+                        new ResourceNotFoundException(
+                                "Category not found with id: " + id
+                        ));
 
         categoryRepository.delete(category);
     }
