@@ -46,13 +46,10 @@ CREATE TABLE IF NOT EXISTS delivery_addresses (
     order_id BIGINT NOT NULL UNIQUE,
     address_line1 VARCHAR(255) NOT NULL,
     address_line2 VARCHAR(255),
-    postal_code VARCHAR(20),
     city VARCHAR(100) NOT NULL,
     country VARCHAR(100) NOT NULL,
     phone VARCHAR(20) NOT NULL,
     reference_note TEXT,
-    latitude DECIMAL(10, 8),
-    longitude DECIMAL(11, 8),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
