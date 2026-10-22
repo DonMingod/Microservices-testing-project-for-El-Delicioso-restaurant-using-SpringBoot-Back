@@ -4,6 +4,7 @@ import com.huisa.enums.OrderStatus;
 import com.huisa.enums.PaymentMethod;
 import com.huisa.enums.PaymentStatus;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
@@ -13,6 +14,7 @@ import java.time.LocalDateTime;
 @Table(name = "orders")
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class Order {
 
 
@@ -33,7 +35,7 @@ public class Order {
     private BigDecimal subtotal;
 
     @Column(name = "tax_amount", precision = 10, scale = 2)
-    private BigDecimal taxtAmount = BigDecimal.ZERO;
+    private BigDecimal taxAmount = BigDecimal.ZERO;
 
     @Column(name = "discount_amount", precision = 10, scale = 2)
     private BigDecimal discountAmount = BigDecimal.ZERO;

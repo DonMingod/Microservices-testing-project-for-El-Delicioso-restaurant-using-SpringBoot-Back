@@ -2,10 +2,14 @@ package com.huisa.model;
 
 import com.huisa.enums.OrderStatus;
 import jakarta.persistence.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Entity
+@Data
+@NoArgsConstructor
 @Table(name = "order_status_history")
 public class OrderStatusHistory {
 
@@ -30,5 +34,6 @@ public class OrderStatusHistory {
 
     @Column(name = "changed_at", insertable = false, updatable = false)
     private LocalDateTime changeAt;
+
 
 }

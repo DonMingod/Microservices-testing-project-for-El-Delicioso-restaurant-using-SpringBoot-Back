@@ -1,6 +1,7 @@
 package com.huisa.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "delivery_addresses")
 @NoArgsConstructor
+@AllArgsConstructor
 public class DeliveryAddress {
 
     @Id
