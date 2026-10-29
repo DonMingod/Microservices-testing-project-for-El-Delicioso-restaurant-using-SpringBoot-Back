@@ -19,7 +19,7 @@ public interface OrderService {
     );
 
     Page<OrderResponseDto> getOrdersByUserId(
-            Long userID,
+            Long userId,
             Pageable pageable
     );
 
