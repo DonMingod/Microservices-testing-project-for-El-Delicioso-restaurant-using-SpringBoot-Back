@@ -7,10 +7,6 @@ import jakarta.validation.constraints.Size;
 
 public record DeliveryAddressRequestDto(
 
-        @NotNull(message = "El ID del pedido es obligatorio")
-        @Positive(message = "El ID del pedido debe ser positivo")
-        Long orderId,
-
         @NotBlank(message = "La dirección es obligatoria")
         @Size(max = 255, message = "La dirección no puede superar los 255 caracteres")
         String addressLine1,
