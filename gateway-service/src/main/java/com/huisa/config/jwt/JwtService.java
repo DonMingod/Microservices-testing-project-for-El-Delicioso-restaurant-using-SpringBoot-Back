@@ -37,6 +37,17 @@ public class JwtService {
         return extractAllClaims(token).getSubject();
     }
 
+    public Long extractUserId(String token) {
+        Object userId = extractAllClaims(token).get("userId");
+        if (userId instanceof Number number) {
+            return number.longValue();
+        }
+        if (userId instanceof String value && !value.isBlank()) {
+            return Long.parseLong(value);
+        }
+        throw new IllegalArgumentException("El token no contiene un userId válido");
+    }
+
     private Claims extractAllClaims(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(secretKey)

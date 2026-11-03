@@ -42,6 +42,11 @@ public class JwtAuthenticationFilter implements WebFilter {
         }
 
         String username = jwtService.extractUsername(token);
+        Long userId = jwtService.extractUserId(token);
+
+        ServerWebExchange mutatedExchange = exchange.mutate()
+                .request(builder -> builder.header("X-Auth-User-Id", String.valueOf(userId)))
+                .build();
 
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                 username,
@@ -52,7 +57,7 @@ public class JwtAuthenticationFilter implements WebFilter {
         );
         SecurityContextImpl securityContext =
                 new SecurityContextImpl(authentication);
-         return chain.filter(exchange)
+         return chain.filter(mutatedExchange)
                  .contextWrite(ReactiveSecurityContextHolder.withSecurityContext(Mono.just(securityContext)
                  )
                  );

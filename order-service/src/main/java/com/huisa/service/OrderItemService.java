@@ -9,15 +9,14 @@ import java.util.List;
 
 public interface OrderItemService {
 
-
     List<OrderItemResponseDto> createOrderItems(
             List<OrderItemRequestDto> items,
             Order order
     );
 
-
     List<OrderItemResponseDto> getOrderItemsByOrderId(Long orderId);
 
     void deleteOrderItemsByOrderId(Long orderId);
 
+    void refreshOrderTotals(Long orderId);
 }

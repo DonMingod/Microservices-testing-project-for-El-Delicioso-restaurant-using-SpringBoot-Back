@@ -8,10 +8,10 @@ import com.huisa.dto.OrderRequestDto;
 import com.huisa.model.Order;
 import com.huisa.model.OrderItem;
 import com.huisa.repository.OrderItemRepository;
+import com.huisa.repository.OrderRepository;
 import com.huisa.service.OrderItemService;
 import com.huisa.util.OrderItemMapper;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.persistence.Table;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,6 +26,7 @@ public class OrderItemServiceImpl  implements OrderItemService {
 
 
     private final OrderItemRepository orderItemRepository;
+    private final OrderRepository orderRepository;
     private final OrderItemMapper orderItemMapper;
     private final MenuClient menuClient;
 
@@ -132,5 +133,41 @@ public class OrderItemServiceImpl  implements OrderItemService {
         orderItemRepository.deleteByOrderId(orderId);
     }
 
+    @Override
+    public void refreshOrderTotals(Long orderId) {
+        if (orderId == null || orderId <= 0) {
+            throw new IllegalArgumentException(
+                    "El ID del pedido debe ser positivo"
+            );
+        }
 
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "No se encontró el pedido con ID: " + orderId
+                ));
+
+        BigDecimal subtotal = orderItemRepository.findByOrderId(orderId)
+                .stream()
+                .map(item -> item.getUnitPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        BigDecimal taxAmount = BigDecimal.ZERO;
+        BigDecimal discountAmount = BigDecimal.ZERO;
+        BigDecimal deliveryFee = order.getDeliveryFee() == null
+                ? BigDecimal.ZERO
+                : order.getDeliveryFee();
+
+        BigDecimal totalAmount = subtotal
+                .add(taxAmount)
+                .subtract(discountAmount)
+                .add(deliveryFee);
+
+        order.setSubtotal(subtotal);
+        order.setTaxAmount(taxAmount);
+        order.setDiscountAmount(discountAmount);
+        order.setDeliveryFee(deliveryFee);
+        order.setTotalAmount(totalAmount);
+
+        orderRepository.save(order);
+    }
 }
