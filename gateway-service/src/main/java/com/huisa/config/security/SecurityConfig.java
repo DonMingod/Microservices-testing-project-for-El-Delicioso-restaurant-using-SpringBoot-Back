@@ -35,7 +35,8 @@ public class SecurityConfig {
 
                         .pathMatchers(
                                 "/auth-service/auth/login",
-                                "/auth-service/auth/register"
+                                "/auth-service/auth/register",
+                                "/order-service/orders/**"
                         ).permitAll()
 
                         .anyExchange().authenticated()

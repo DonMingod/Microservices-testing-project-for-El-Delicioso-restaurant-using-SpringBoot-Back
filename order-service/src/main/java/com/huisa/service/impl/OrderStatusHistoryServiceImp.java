@@ -23,37 +23,33 @@ public class OrderStatusHistoryServiceImp implements OrderStatusHistoryService {
 
     @Override
     public OrderStatusHistoryResponseDto recordStatusChange(
-            Order order,
-            OrderStatus oldStatus,
-            OrderStatus newStatus,
-            Long changedBy) {
+           Order order,
+           OrderStatus oldStatus,
+           OrderStatus newStatus,
+           Long changedBy) {
 
         if (order == null || order.getId() == null) {
-            throw new IllegalArgumentException(
-                    "El pedido debe existir para registrar su historial"
-            );
+           throw new IllegalArgumentException(
+                   "El pedido debe existir para registrar su historial"
+           );
         }
-         if (oldStatus == null) {
-            throw new IllegalArgumentException(
-                    "El estado anterior es obligatorio"
-            );
-        }
-         if (newStatus == null) {
-            throw new IllegalArgumentException(
-                    "El nuevo estado es obligatorio"
-            );
+
+        if (newStatus == null) {
+           throw new IllegalArgumentException(
+                   "El nuevo estado es obligatorio"
+           );
         }
 
         if (changedBy == null || changedBy <= 0) {
-            throw new IllegalArgumentException(
-                    "El ID del usuario debe ser positivo"
-            );
+           throw new IllegalArgumentException(
+                   "El ID del usuario debe ser positivo"
+           );
         }
 
-        if (oldStatus == newStatus) {
-            throw new IllegalArgumentException(
-                    "El pedido ya tiene ese estado"
-            );
+        if (oldStatus != null && oldStatus == newStatus) {
+           throw new IllegalArgumentException(
+                   "El pedido ya tiene ese estado"
+           );
         }
 
         OrderStatusHistory history = new OrderStatusHistory();
@@ -63,7 +59,7 @@ public class OrderStatusHistoryServiceImp implements OrderStatusHistoryService {
         history.setChangeBy(changedBy);
 
         OrderStatusHistory savedHistory =
-                historyRepository.save(history);
+               historyRepository.save(history);
 
         return historyMapper.toDto(savedHistory);
     }

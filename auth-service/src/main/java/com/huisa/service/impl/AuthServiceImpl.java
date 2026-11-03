@@ -6,13 +6,14 @@ import com.huisa.dto.LoginRequestDto;
 import com.huisa.dto.LoginResponseDto;
 import com.huisa.dto.UserRequestDto;
 import com.huisa.dto.UserResponseDto;
+import com.huisa.model.User;
+import com.huisa.repository.UserRepository;
 import com.huisa.service.AuthService;
 import com.huisa.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,7 @@ public class AuthServiceImpl implements AuthService {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
     private final UserService userService;
+    private final UserRepository userRepository;
 
     @Override
     public LoginResponseDto login(LoginRequestDto loginRequestDto) {
@@ -37,11 +39,18 @@ public class AuthServiceImpl implements AuthService {
               );
         UserDetails userDetails =
                 (UserDetails) authentication.getPrincipal();
-        String token =  jwtService.generateToken(userDetails);
+        User user = userRepository.findByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new IllegalStateException(
+                        "No se encontró el usuario autenticado"
+                ));
+
+        String token = jwtService.generateToken(userDetails, user.getId());
         return LoginResponseDto.builder()
                 .token(token)
                 .type("Bearer")
+                .userId(user.getId())
                 .email(userDetails.getUsername())
+                .name(user.getName())
                 .build();
     }
 
